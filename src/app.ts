@@ -1,12 +1,10 @@
-import express, { Request, Response, NextFunction } from 'express';
+import express, { Response, NextFunction } from 'express';
 import compression from 'compression';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import helmet from 'helmet';
 import noCache from 'nocache';
 import routers from 'api';
-import swaggerUi from 'swagger-ui-express';
-import yaml from 'yamljs';
 import initializeResources from 'resources';
 import { APP_CONSTANTS } from 'utils/constants';
 import logger, { errorLogging, requestLogging } from './logger';
@@ -52,7 +50,7 @@ app.use(APP_CONSTANTS.apiPrefix, routers);
 initializeErrorHandler();
 
 export const listen = async () => {
-  // await initializeResources();
+  await initializeResources();
   app.listen(config.port || 3000, () => {
     logger.info(`App listening on the port ${config.port || 3000}`);
   });
