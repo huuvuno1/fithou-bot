@@ -46,27 +46,15 @@ function initializeErrorHandler() {
   app.use(errorMiddleware);
 }
 
-function initializeSwagger() {
-  if (process.env.NODE_ENV === 'prd') {
-    return;
-  }
-  const swaggerDoc = yaml.load(`${__dirname}/openapi3.yaml`);
-  app.use(`${APP_CONSTANTS.apiPrefix}/swagger-ui`, swaggerUi.serve, swaggerUi.setup(swaggerDoc));
-  app.use(`${APP_CONSTANTS.apiPrefix}/api-docs`, (req: Request, res: Response) => {
-    res.send(swaggerDoc);
-  });
-}
-
 initializeSecurity();
 initializeMiddlewares();
 app.use(APP_CONSTANTS.apiPrefix, routers);
 initializeErrorHandler();
-initializeSwagger();
 
 export const listen = async () => {
   // await initializeResources();
   app.listen(config.port || 3000, () => {
-    logger.info(`App listening on the port ${config.port}`);
+    logger.info(`App listening on the port ${config.port || 3000}`);
   });
 };
 
