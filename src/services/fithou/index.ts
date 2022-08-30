@@ -24,10 +24,17 @@ export const crawlFithouService = async () => {
       });
 
     if (!oldArticles) {
-      await ArticlesModel.create({
+      const newArticles = await ArticlesModel.create({
         link: `${config.service.fithou}${list[0]}`,
         aid: list[0].match(regex)[0],
       });
+
+      logger.info(`data: ${newArticles}`);
+      logger.info(`Have a new article!`);
+      return {
+        data: newArticles,
+        message: 'Have a new article!',
+      };
     }
 
     const lastArticleAid = Number(list[0].match(regex)[0]);
