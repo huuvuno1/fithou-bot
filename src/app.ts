@@ -51,8 +51,10 @@ initializeErrorHandler();
 
 export const listen = async () => {
   await initializeResources();
-  app.listen(config.port || 3000, () => {
-    logger.info(`App listening on the port ${config.port || 3000}`);
+  app.listen(config.port, () => {
+    logger.info(`=================================`);
+    logger.info(`🚀 ⚡️[server]: Server is running at http://localhost:${config.port}`);
+    logger.info(`=================================`);
   });
 };
 

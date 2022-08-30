@@ -12,4 +12,6 @@ const DEFAULT_PAGING = {
   skip: 0,
 };
 
-export { APP_CONSTANTS, DEFAULT_PAGING };
+const CRAWL_FITHOU_URL = 'http://fithou.edu.vn/Category.aspx';
+
+export { APP_CONSTANTS, DEFAULT_PAGING, CRAWL_FITHOU_URL };
