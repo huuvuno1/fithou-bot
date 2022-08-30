@@ -29,6 +29,7 @@ function initializeMiddlewares() {
   app.use(express.json());
   app.use(cookieParser());
   app.use(compression());
+  app.use(express.static('public'));
 
   // use for computing processing time on response
   app.use((request: any, _response: Response, next: NextFunction) => {

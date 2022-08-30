@@ -29,6 +29,7 @@
     "@types/cors": "^2.8.12",
     "@types/dotenv-safe": "^8.1.2",
     "@types/express": "^4.17.13",
+    "@types/md5": "^2.3.2",
     "@types/multer": "^1.4.7",
     "@types/validator": "^13.7.1",
     "@types/yamljs": "^0.2.31",
@@ -46,6 +47,7 @@
   },
   "dependencies": {
     "axios": "^0.27.2",
+    "cheerio": "^1.0.0-rc.12",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.13.2",
     "compression": "^1.7.4",
@@ -57,9 +59,11 @@
     "express": "^4.17.1",
     "express-winston": "^4.2.0",
     "helmet": "^4.6.0",
+    "md5": "^2.3.0",
     "mongoose": "^6.0.12",
     "multer": "^1.4.3",
     "nocache": "^3.0.1",
+    "node-html-to-image": "^3.2.4",
     "sequelize": "^6.8.0",
     "winston": "^3.3.3",
     "yamljs": "^0.3.0"
