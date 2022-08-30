@@ -10,6 +10,7 @@ import noCache from 'nocache';
 import initializeResources from 'resources';
 import { APP_CONSTANTS } from 'utils/constants';
 import logger, { errorLogging, requestLogging } from './logger';
+import runjobs from 'jobs';
 
 const app = express();
 
@@ -51,6 +52,7 @@ initializeErrorHandler();
 
 export const listen = async () => {
   await initializeResources();
+  await runjobs();
   app.listen(config.port, () => {
     logger.info(`=================================`);
     logger.info(`🚀 ⚡️[server]: Server is running at http://localhost:${config.port}`);

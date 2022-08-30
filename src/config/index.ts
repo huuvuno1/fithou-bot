@@ -26,4 +26,11 @@ export default {
     fithou: process.env.FITHOU_URL,
     ctms: process.env.CTMS_URL,
   },
+  jobs: {
+    fithou: {
+      hour: process.env.FITHOU_JOB_HOUR,
+      minute: process.env.FITHOU_JOB_MINUTE || 30,
+      second: process.env.FITHOU_JOB_SECOND,
+    },
+  },
 };
