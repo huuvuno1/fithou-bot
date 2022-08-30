@@ -1,15 +1,15 @@
 import express, { Response, NextFunction } from 'express';
+import routers from 'api';
 import compression from 'compression';
+import config from 'config';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import helmet from 'helmet';
+import { errorMiddleware } from 'middlewares';
 import noCache from 'nocache';
-import routers from 'api';
 import initializeResources from 'resources';
 import { APP_CONSTANTS } from 'utils/constants';
 import logger, { errorLogging, requestLogging } from './logger';
-import config from 'config';
-import { errorMiddleware } from 'middlewares';
 
 const app = express();
 

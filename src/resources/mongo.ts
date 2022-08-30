@@ -10,7 +10,7 @@ const userNamePwd = mongoDBConfig.username ? `${mongoDBConfig.username}:${mongoD
 
 let mongodbUrl = `${mongodbProtocol}://${userNamePwd}${mongoDBConfig.host}/${mongoDBConfig.dbName}?${
   userNamePwd ? 'authSource=admin' : ''
-}retryWrites=true`;
+}&retryWrites=true`;
 
 if (mongoDBConfig.replicaSet) {
   mongodbUrl += `&replicaSet=${mongoDBConfig.replicaSet}`;
