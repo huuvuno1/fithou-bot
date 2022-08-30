@@ -16,12 +16,3 @@ process.on('unhandledRejection', (e) => {
 });
 
 app.listen();
-
-(async () => {
-  const result = await loginCtms('nguyenhuuvuno1@gmail.com', 'huuvuno1');
-  const userId = await getUserID(result.cookie);
-  const response = await getSubjects(result.cookie, userId);
-  const data = await convertHtmlToImage(response);
-  console.log(response, data);
-  logoutCtms(result.cookie);
-})();

@@ -1,9 +1,9 @@
+import express, { Response, NextFunction } from 'express';
 import routers from 'api';
 import compression from 'compression';
 import config from 'config';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
-import express, { NextFunction, Response } from 'express';
 import helmet from 'helmet';
 import { errorMiddleware } from 'middlewares';
 import noCache from 'nocache';
@@ -52,8 +52,10 @@ initializeErrorHandler();
 
 export const listen = async () => {
   await initializeResources();
-  app.listen(config.port || 3000, () => {
-    logger.info(`App listening on the port ${config.port || 3000}`);
+  app.listen(config.port, () => {
+    logger.info(`=================================`);
+    logger.info(`🚀 ⚡️[server]: Server is running at http://localhost:${config.port}`);
+    logger.info(`=================================`);
   });
 };
 
