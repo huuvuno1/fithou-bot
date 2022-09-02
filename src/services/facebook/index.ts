@@ -1,5 +1,5 @@
 import logger from 'logger';
-import { convertHtmlToImage, deleteImage, getSubjects, getUserID } from 'services/ctms';
+import { convertHtmlToImage, deleteImage, getSubjects, getUserID, logoutCtms } from 'services/ctms';
 import config from '../../config';
 const { default: axios } = require('axios');
 
@@ -63,6 +63,7 @@ const sendSubjectCtms = async (receiver: string, cookie: Array<string>) => {
       },
     },
   });
+  logoutCtms(cookie);
 };
 
 export { sendMessage, sendLoginCtmsButton, sendSubjectCtms };
