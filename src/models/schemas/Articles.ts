@@ -7,6 +7,7 @@ const ArticlesSchema = new Schema<Articles>(
   {
     aid: { type: Number, required: true },
     link: { type: String, required: true },
+    subscribedIDs: { type: [String], required: true, default: [] },
   },
   {
     timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' },

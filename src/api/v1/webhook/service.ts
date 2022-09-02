@@ -1,4 +1,4 @@
-import { sendLoginCtmsButton, sendMessage } from 'services/facebook';
+import { sendLoginCtmsButton, sendMessage, subscribedFithouNotification } from 'services/facebook';
 
 const handleWebhook = async (data: any) => {
   const messaging = data.entry[0].messaging;
@@ -10,11 +10,13 @@ const handleWebhook = async (data: any) => {
       switch (payload) {
         case 'CTMS_SUBJECTS':
           sendLoginCtmsButton(id);
-          break;
+          return;
+        case 'FITHOU_NOTIFICATION':
+          subscribedFithouNotification(id);
+          return;
         default:
-          break;
+          return;
       }
-      return;
     } else if (message) {
       sendMessage(id, {
         text: `Bot ngu ngok quá, không hiểu gì hết :(`,

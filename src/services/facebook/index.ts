@@ -1,4 +1,5 @@
 import logger from 'logger';
+import { ArticlesModel } from 'models';
 import { convertHtmlToImage, deleteImage, getSubjects, getUserID, logoutCtms } from 'services/ctms';
 import config from '../../config';
 const { default: axios } = require('axios');
@@ -66,4 +67,15 @@ const sendSubjectCtms = async (receiver: string, cookie: Array<string>) => {
   logoutCtms(cookie);
 };
 
-export { sendMessage, sendLoginCtmsButton, sendSubjectCtms };
+const subscribedFithouNotification = async (receiver: string) => {
+  sendMessage(receiver, {
+    text: `Đăng ký nhận bài viết mới từ Fithou thành công.`,
+  });
+  const article = await ArticlesModel.findOne({});
+  if (article.subscribedIDs.indexOf(receiver) === -1) {
+    article.subscribedIDs.push(receiver);
+    await article.save();
+  }
+};
+
+export { sendMessage, sendLoginCtmsButton, sendSubjectCtms, subscribedFithouNotification };
