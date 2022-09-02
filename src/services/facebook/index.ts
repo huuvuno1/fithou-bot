@@ -76,6 +76,9 @@ const subscribedFithouNotification = async (receiver: string) => {
     article.subscribedIDs.push(receiver);
     await article.save();
   }
+  sendMessage(receiver, {
+    text: `Gửi bạn bài viết mới nhất hiện tại. Bot sẽ câp nhật thông báo khi có bài viết mới.\n${article.link}`,
+  });
 };
 
 export { sendMessage, sendLoginCtmsButton, sendSubjectCtms, subscribedFithouNotification };
