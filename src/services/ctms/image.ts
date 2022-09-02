@@ -3,10 +3,10 @@ import fs from 'fs';
 
 const convertHtmlToImage = (html: string): Promise<any> => {
   return new Promise((resolve, reject) => {
-    const image = `./public/image-${new Date().getTime()}.png`;
+    const image = `image-${new Date().getTime()}.png`;
     const nodeHtmlToImage = require('node-html-to-image');
     nodeHtmlToImage({
-      output: image,
+      output: `./public/${image}`,
       html: `
         <!DOCTYPE html>
         <html>
@@ -37,7 +37,7 @@ const convertHtmlToImage = (html: string): Promise<any> => {
 
 const deleteImage = (image: string): Promise<any> => {
   return new Promise((resolve, reject) => {
-    fs.unlink(image, (err) => {
+    fs.unlink(`./public/${image}`, (err) => {
       if (err) {
         reject(err);
       } else {

@@ -27,7 +27,7 @@ const loginCtms = async (username: string, password: string) => {
 
   return {
     cookie: response.headers['set-cookie'],
-    isSuccess: response.data.includes('Xin chào mừng'),
+    isSuccess: !!response.data.includes('Xin chào mừng'),
     errorMsg: dom.text(),
   };
 };

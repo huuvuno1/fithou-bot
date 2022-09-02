@@ -14,6 +14,8 @@ if (fs.existsSync(pathEnv)) {
 export default {
   env: process.env.NODE_ENV,
   port: process.env.PORT || 3000,
+  host: process.env.HOST || 'localhost',
+  accessToken: process.env.FB_VERIFY_TOKEN,
   mongodb: {
     protocol: process.env.MONGODB_PROTOCOL,
     username: process.env.MONGODB_USERNAME,

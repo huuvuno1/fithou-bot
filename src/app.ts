@@ -13,8 +13,16 @@ import logger, { errorLogging, requestLogging } from './logger';
 
 const app = express();
 
-app.use(cors());
-
+app.use(cors({ origin: '*' }));
+// app.use(
+//   helmet({
+//     contentSecurityPolicy: {
+//       directives: {
+//         'frame-ancestors': ["'self'", 'https://facebook.com', 'http://localhost:5500'],
+//       },
+//     },
+//   })
+// );
 function initializeSecurity() {
   app.use(noCache());
   app.use(helmet.frameguard());
@@ -45,7 +53,7 @@ function initializeErrorHandler() {
   app.use(errorMiddleware);
 }
 
-initializeSecurity();
+// initializeSecurity();
 initializeMiddlewares();
 app.use(APP_CONSTANTS.apiPrefix, routers);
 initializeErrorHandler();

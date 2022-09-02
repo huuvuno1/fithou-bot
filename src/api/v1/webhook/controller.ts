@@ -1,11 +1,18 @@
 import { NextFunction, Response } from 'express';
 import RequestWithUser from 'utils/rest/request';
-import fmt from 'utils/formatter';
+import * as service from './service';
 
 const verifyWebhook = (request: RequestWithUser, response: Response, next: NextFunction) => {
-  const data: any = { message: 'Service Up' };
-  response.status(200);
-  response.send(fmt.formatResponse(data, Date.now() - request.startTime, 'OK', 1));
+  if (request.query['hub.verify_token'] === process.env.FB_VERIFY_TOKEN) {
+    response.send(request.query['hub.challenge']);
+  }
+  response.send('Error, wrong validation token');
 };
 
-export { verifyWebhook };
+const handleWebhook = (request: RequestWithUser, response: Response, next: NextFunction) => {
+  console.log('co nguoi nhan tin', JSON.stringify(request.body));
+  service.handleWebhook(request.body);
+  response.status(200).send('EVENT_RECEIVED');
+};
+
+export { verifyWebhook, handleWebhook };

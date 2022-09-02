@@ -1,3 +1,4 @@
 import ArticlesModel from './schemas/Articles';
+import UserModel from './schemas/Users';
 
-export { ArticlesModel };
+export { UserModel, ArticlesModel };
