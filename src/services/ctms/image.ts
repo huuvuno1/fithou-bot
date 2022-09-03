@@ -1,10 +1,10 @@
 /* eslint-disable max-len */
+const nodeHtmlToImage = require('node-html-to-image');
 import fs from 'fs';
 
 const convertHtmlToImage = (html: string): Promise<any> => {
   return new Promise((resolve, reject) => {
     const image = `image-${new Date().getTime()}.png`;
-    const nodeHtmlToImage = require('node-html-to-image');
     nodeHtmlToImage({
       output: `./public/${image}`,
       html: `
