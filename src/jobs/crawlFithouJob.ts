@@ -10,7 +10,12 @@ export const crawlFithouJob = async () => {
 
   const resolveAll = await Promise.all([result, oldArticles]);
 
-  const subscribers = resolveAll[1].toObject().subscribedIDs;
+  const subscribers = resolveAll[1] && resolveAll[1].toObject().subscribedIDs;
+
+  if (!resolveAll[0]?.data || !subscribers) {
+    logger.warn(`There is not an article in the db`);
+    return;
+  }
 
   if (resolveAll[0]?.type === CRAWL_FITHOU_TYPE.oneRecord || resolveAll[0]?.type === CRAWL_FITHOU_TYPE.new) {
     for (let i = 0; i < subscribers.length; i++) {

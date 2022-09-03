@@ -32,7 +32,7 @@ export const crawlFithouService = async () => {
       });
 
       return {
-        data: newArticles.toObject(),
+        data: newArticles && newArticles.toObject(),
         message: 'Have a new article!',
         type: CRAWL_FITHOU_TYPE.new,
       };
@@ -84,7 +84,7 @@ export const crawlFithouService = async () => {
     }
 
     return {
-      data: oldArticles.toObject(),
+      data: oldArticles && oldArticles.toObject(),
       message: 'Not change!',
       type: CRAWL_FITHOU_TYPE.noChange,
     };

@@ -7,15 +7,19 @@ export const login = async (username: string, password: string, id: string) => {
   if (result.isSuccess) {
     const user = await UserModel.findOne({ username });
     if (!user) {
-      const newUser = new UserModel({ username, password, id });
+      const newUser = new UserModel({ username, password, subscribedIDs: [id] });
       await newUser.save();
     } else {
-      await UserModel.updateOne({ username }, { password, id });
+      if (user.subscribedIDs.indexOf(id) === -1) user.subscribedIDs.push(id);
+      await UserModel.updateOne({ username }, { password, subscribedIDs: user.subscribedIDs });
     }
-    sendMessage(id, {
+    await sendMessage(id, {
       text: `Xin chào ${username},\nBot đã lập lịch theo dõi tín chỉ cho bạn.`,
     });
-    sendSubjectCtms(id, result.cookie);
+    sendMessage(id, {
+      text: `Dưới đây là các môn bạn hiện tại bạn có thể đăng ký. \nBot sẽ gửi thông báo cho bạn khi có thay đổi.`,
+    });
+    sendSubjectCtms(id, result.cookie, username);
   }
   return result;
 };
