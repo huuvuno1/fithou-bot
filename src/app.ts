@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import express, { Response, NextFunction } from 'express';
 import routers from 'api';
 import compression from 'compression';
