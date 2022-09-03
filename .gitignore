@@ -51,4 +51,4 @@ Thumbs.db
 .env.dev
 .env
 
-public
+public/image-*.png
