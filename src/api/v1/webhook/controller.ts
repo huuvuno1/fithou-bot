@@ -1,9 +1,10 @@
+import config from 'config';
 import { NextFunction, Response } from 'express';
 import RequestWithUser from 'utils/rest/request';
 import * as service from './service';
 
 const verifyWebhook = (request: RequestWithUser, response: Response, next: NextFunction) => {
-  if (request.query['hub.verify_token'] === process.env.FB_VERIFY_TOKEN) {
+  if (request.query['hub.verify_token'] === config.accessToken) {
     response.send(request.query['hub.challenge']);
   }
   response.send('Error, wrong validation token');
