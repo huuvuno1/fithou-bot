@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "copy-env-files": "copyfiles ./.env.* dist/",
-    "build": "rm -rf ./dist && ./node_modules/.bin/tsc && npm run-script copy-env-files && cp src/openapi3.yaml dist/openapi3.yaml",
+    "build": "rm -rf ./dist && tsc && npx tsc-alias",
     "lint": "./node_modules/.bin/eslint . --ext .js,.jsx,.ts,.tsx",
     "lint-fix": "./node_modules/.bin/eslint . --ext .js,.jsx,.ts,.tsx --fix",
     "prepare": "npx husky install",
