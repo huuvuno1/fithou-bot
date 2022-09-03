@@ -4,9 +4,10 @@ import config from 'config';
 
 export const authenticationMiddleware = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const authKey = req.headers.authKey;
+    const authKey = req.headers.authkey;
     if (authKey === config.auth.key) {
       next();
+      return;
     }
 
     res.status(401).send('Unauthorized');
