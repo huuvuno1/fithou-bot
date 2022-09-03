@@ -7,7 +7,7 @@ import crawlCtmsJob from './crawlCtmsSubject';
 const scheduler = new ToadScheduler();
 
 const rule = new schedule.RecurrenceRule();
-rule.minute = config.jobs.fithou.minute;
+rule.second = config.jobs.fithou.second;
 
 import { crawlFithouJob } from './crawlFithouJob';
 
