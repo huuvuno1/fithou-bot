@@ -26,12 +26,13 @@ const convertHtmlToImage = (html: string): Promise<any> => {
           image,
         })
       )
-      .catch((e: Error) =>
+      .catch((e: Error) => {
+        console.log('loi khi upload anh', e);
         reject({
           status: false,
           message: e.message,
-        })
-      );
+        });
+      });
   });
 };
 
