@@ -7,7 +7,8 @@ const UsersSchema = new Schema<User>(
   {
     username: { type: String, required: true },
     password: { type: String, required: true },
-    id: { type: String, required: true },
+    subscribedIDs: { type: [String], default: [] },
+    subjectHTML: { type: String, default: '' },
   },
   {
     timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' },
