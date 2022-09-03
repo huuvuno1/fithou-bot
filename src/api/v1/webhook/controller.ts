@@ -10,7 +10,6 @@ const verifyWebhook = (request: RequestWithUser, response: Response, next: NextF
 };
 
 const handleWebhook = (request: RequestWithUser, response: Response, next: NextFunction) => {
-  console.log('co nguoi nhan tin', JSON.stringify(request.body));
   service.handleWebhook(request.body);
   response.status(200).send('EVENT_RECEIVED');
 };

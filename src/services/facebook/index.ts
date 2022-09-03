@@ -5,7 +5,6 @@ import config from '../../config';
 const { default: axios } = require('axios');
 
 const sendMessage = async (id: string, message: any) => {
-  console.log(message);
   try {
     await axios.post(`https://graph.facebook.com/v14.0/me/messages?access_token=${config.accessToken}`, {
       recipient: {
@@ -13,7 +12,6 @@ const sendMessage = async (id: string, message: any) => {
       },
       message,
     });
-    console.log('Send message success');
   } catch {
     logger.error(`Error when sending button id: ${id}`);
   }
