@@ -35,4 +35,7 @@ export default {
       second: process.env.FITHOU_JOB_SECOND,
     },
   },
+  auth: {
+    key: process.env.AUTH_KEY,
+  },
 };
