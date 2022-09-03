@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body  class="pr-5">
+    <script>
+        (function(d, s, id){
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) {return;}
+        js = d.createElement(s); js.id = id;
+        js.src = "//connect.facebook.net/en_US/messenger.Extensions.js";
+        fjs.parentNode.insertBefore(js, fjs);
+        }(document, 'script', 'Messenger'));
+
+        window.extAsyncInit = function() {
+         console.log(window.location)
+        };
+
+        async function login() {
+          const $ = document.querySelector.bind(document);
+          const params = new Proxy(new URLSearchParams(window.location.search), {
+            get: (searchParams, prop) => searchParams.get(prop),
+          });
+          const response = await fetch('/v1/ctms', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({
+                "id": params.id,
+                "username": $('#username').value,
+                "password": $('#password').value
+              })
+            }) 
+          const data = await response.json();
+          if (data.data.isSuccess) {
+            $('#msg').classList.remove('text-red-500');
+            $('#msg').classList.add('text-green-500');
+            $('#username').disabled = true;
+            $('#password').disabled = true;
+            $('#msg').textContent = 'Đăng nhập thành công, bạn có thể  đóng tab này';
+            $('#btnSignIn').classList.add('hidden');
+            MessengerExtensions.requestCloseBrowser(function success() {
+              
+              }, function error(err) {
+                // an error occurred
+              });  
+              window.top.close()
+          } else {
+            $('#msg').textContent = data.data.errorMsg;
+          }
+        }
+    </script>
+    <div class="h-screen border-gray-400">
+        <div class="bg-white px-8 pt-6 pb-8 mb-4 flex flex-col">
+            <div class="mb-6 font-bold text-center">
+                Nhập tài khoản CTMS
+            </div>
+            <div class="mb-4">
+              <label class="block text-grey-darker text-sm font-bold mb-2" for="username">
+                Username
+              </label>
+              <input class="shadow appearance-none border rounded w-full py-2 px-3 text-grey-darker" id="username" type="text" placeholder="Username">
+            </div>
+            <div class="mb-6">
+              <label class="block text-grey-darker text-sm font-bold mb-2" for="password">
+                Password
+              </label>
+              <input class="shadow appearance-none border border-red rounded w-full py-2 px-3 text-grey-darker mb-3" id="password" type="password" placeholder="******************">
+            </div>
+            <div class="mb-4 mt-0 font-bold text-center text-red-500" id="msg">
+              
+          </div>
+            <div class="flex items-center justify-end">
+              <button id="btnSignIn" class="bg-sky-400 hover:bg-blue-dark text-white font-bold py-2 px-4 rounded" type="button" onclick="login()">
+                Sign In
+              </button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

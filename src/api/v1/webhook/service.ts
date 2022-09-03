@@ -1,4 +1,10 @@
-import { sendLoginCtmsButton, sendMessage, subscribedFithouNotification } from 'services/facebook';
+import {
+  sendLoginCtmsButton,
+  sendMessage,
+  subscribedFithouNotification,
+  unsubCtmsNotification,
+  unsubFithouNotification,
+} from 'services/facebook';
 
 const handleWebhook = async (data: any) => {
   const messaging = data.entry[0].messaging;
@@ -13,6 +19,12 @@ const handleWebhook = async (data: any) => {
           return;
         case 'FITHOU_NOTIFICATION':
           subscribedFithouNotification(id);
+          return;
+        case 'UNSUB_CTMS_SUBJECTS':
+          unsubCtmsNotification(id);
+          return;
+        case 'UNSUB_FITHOU_NOTIFICATION':
+          unsubFithouNotification(id);
           return;
         default:
           return;

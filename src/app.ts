@@ -4,6 +4,7 @@ import routers from 'api';
 import compression from 'compression';
 import config from 'config';
 import cookieParser from 'cookie-parser';
+import bodyParser from 'body-parser';
 import cors from 'cors';
 import helmet from 'helmet';
 import { errorMiddleware } from 'middlewares';
@@ -25,6 +26,10 @@ app.use(cors({ origin: '*' }));
 //     },
 //   })
 // );
+
+app.use(bodyParser.json({ limit: '100mb' }));
+app.use(bodyParser.urlencoded({ limit: '100mb', extended: true }));
+
 function initializeSecurity() {
   app.use(noCache());
   app.use(helmet.frameguard());
