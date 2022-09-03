@@ -31,8 +31,6 @@ export const crawlFithouService = async () => {
         aid: list[0].link.match(regex)[0],
       });
 
-      logger.info(`data: ${newArticles}`);
-      logger.info(`Have a new article!`);
       return {
         data: newArticles.toObject(),
         message: 'Have a new article!',
@@ -68,8 +66,6 @@ export const crawlFithouService = async () => {
           });
         }
 
-        logger.info(`data: ${results}`);
-        logger.info(`There are many new articles!`);
         return {
           data: results,
           message: 'There are many new articles!',
@@ -77,8 +73,6 @@ export const crawlFithouService = async () => {
         };
       }
 
-      logger.info(`data: ${config.service.fithou}${list[0].link}`);
-      logger.info(`Have a new article!`);
       return {
         data: {
           link: `${config.service.fithou}${list[0].link}`,
@@ -89,8 +83,6 @@ export const crawlFithouService = async () => {
       };
     }
 
-    logger.info(`data: ${oldArticles}`);
-    logger.info(`Not change!`);
     return {
       data: oldArticles.toObject(),
       message: 'Not change!',
