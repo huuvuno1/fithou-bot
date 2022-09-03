@@ -13,7 +13,9 @@ if (fs.existsSync(pathEnv)) {
 }
 export default {
   env: process.env.NODE_ENV,
-  port: process.env.PORT,
+  port: process.env.PORT || 3000,
+  host: process.env.HOST || 'localhost',
+  accessToken: process.env.FB_VERIFY_TOKEN,
   mongodb: {
     protocol: process.env.MONGODB_PROTOCOL,
     username: process.env.MONGODB_USERNAME,
@@ -25,5 +27,12 @@ export default {
   service: {
     fithou: process.env.FITHOU_URL,
     ctms: process.env.CTMS_URL,
+  },
+  jobs: {
+    fithou: {
+      hour: process.env.FITHOU_JOB_HOUR,
+      minute: process.env.FITHOU_JOB_MINUTE || 30,
+      second: process.env.FITHOU_JOB_SECOND,
+    },
   },
 };

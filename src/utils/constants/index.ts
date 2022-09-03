@@ -12,4 +12,13 @@ const DEFAULT_PAGING = {
   skip: 0,
 };
 
-export { APP_CONSTANTS, DEFAULT_PAGING };
+const CRAWL_FITHOU_URL = 'http://fithou.edu.vn/Category.aspx';
+
+const enum CRAWL_FITHOU_TYPE {
+  new = -1,
+  noChange = 0,
+  oneRecord = 1,
+  manyRecords = 2,
+}
+
+export { APP_CONSTANTS, DEFAULT_PAGING, CRAWL_FITHOU_URL, CRAWL_FITHOU_TYPE };
