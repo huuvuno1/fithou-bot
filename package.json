@@ -42,12 +42,10 @@
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-prettier": "^4.0.0",
     "husky": "^7.0.4",
-    "prettier": "^2.4.1"
+    "prettier": "^2.4.1",
+    "puppeteer": "^17.1.0"
   },
   "dependencies": {
-    "ts-node": "^10.4.0",
-    "typescript": "^4.4.4",
-    "nodemon": "^2.0.14",
     "axios": "^0.27.2",
     "cheerio": "^1.0.0-rc.12",
     "class-transformer": "^0.5.1",
@@ -67,8 +65,12 @@
     "nocache": "^3.0.1",
     "node-html-to-image": "^3.2.4",
     "node-schedule": "^2.1.0",
+    "nodemon": "^2.0.14",
+    "puppeteer-cluster": "^0.23.0",
     "sequelize": "^6.8.0",
     "toad-scheduler": "^1.6.1",
+    "ts-node": "^10.4.0",
+    "typescript": "^4.4.4",
     "winston": "^3.3.3",
     "yamljs": "^0.3.0"
   }

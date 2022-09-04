@@ -3,6 +3,7 @@ import fs from 'fs';
 
 const convertHtmlToImage = (html: string): Promise<any> => {
   return new Promise((resolve, reject) => {
+    console.log('html cidn chao sdlfj');
     const image = `image-${new Date().getTime()}.png`;
     const nodeHtmlToImage = require('node-html-to-image');
     nodeHtmlToImage({
@@ -19,6 +20,7 @@ const convertHtmlToImage = (html: string): Promise<any> => {
             </body>
         </html>
         `,
+      puppeteerArgs: { args: ['--no-sandbox', '--disable-setuid-sandbox'] },
     })
       .then(() =>
         resolve({
