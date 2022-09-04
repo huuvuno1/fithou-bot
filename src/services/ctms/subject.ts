@@ -36,18 +36,18 @@ const getSubjects = async (cookie: Array<string>, userId: string) => {
 const getSubjectsInHTML = (html: string): string => {
   const $ = cheerio.load(html);
   const subjects = $('tr');
+  let result = '';
   for (let i = 1; i < subjects.length; i++) {
     const subject = subjects[i];
     const subjectCode = $(subject).find('td').eq(1).text().trim();
     const subjectName = $(subject).find('td').eq(2).text().trim();
     const subjectTime = $(subject).find('td').eq(7).text().trim();
-    return `
-      Mã lớp: ${subjectCode}
-      Tên lớp: ${subjectName}
-      Lịch học: ${subjectTime}
-      ------------------\n
-    `;
+    result += `Mã lớp: ${subjectCode}
+Tên lớp: ${subjectName}
+Lịch học: ${subjectTime}
+------------------\n`;
   }
+  return result;
 };
 
 export { getSubjects, getUserID, getSubjectsInHTML };
