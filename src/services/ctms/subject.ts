@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import axios from 'axios';
-import cheerio from 'cheerio';
+import * as cheerio from 'cheerio';
 import config from 'config';
 import QueryString from 'qs';
 
@@ -33,4 +33,21 @@ const getSubjects = async (cookie: Array<string>, userId: string) => {
   return subjects.html();
 };
 
-export { getSubjects, getUserID };
+const getSubjectsInHTML = (html: string): string => {
+  const $ = cheerio.load(html);
+  const subjects = $('tr');
+  for (let i = 1; i < subjects.length; i++) {
+    const subject = subjects[i];
+    const subjectCode = $(subject).find('td').eq(1).text().trim();
+    const subjectName = $(subject).find('td').eq(2).text().trim();
+    const subjectTime = $(subject).find('td').eq(7).text().trim();
+    return `
+      Mã lớp: ${subjectCode}
+      Tên lớp: ${subjectName}
+      Lịch học: ${subjectTime}
+      ------------------\n
+    `;
+  }
+};
+
+export { getSubjects, getUserID, getSubjectsInHTML };

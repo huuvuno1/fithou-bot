@@ -1,6 +1,7 @@
+/* eslint-disable max-len */
 import logger from 'logger';
 import { ArticlesModel, UserModel } from 'models';
-import { convertHtmlToImage, deleteImage, getSubjects, getUserID, logoutCtms } from 'services/ctms';
+import { convertHtmlToImage, deleteImage, getSubjects, getSubjectsInHTML, getUserID, logoutCtms } from 'services/ctms';
 import config from '../../config';
 const { default: axios } = require('axios');
 
@@ -48,14 +49,23 @@ const sendSubjectCtms = async (receiver: string | string[], cookie: Array<string
   const user = await UserModel.findOne({ username });
   if (typeof receiver === 'string' && user.subjectHTML !== '') {
     const data = await convertHtmlToImage(user.subjectHTML);
-    sendMessage(receiver, {
-      attachment: {
-        type: 'image',
-        payload: {
-          url: config.host + '/' + data.image,
+    if (data.status) {
+      sendMessage(receiver, {
+        attachment: {
+          type: 'image',
+          payload: {
+            url: config.host + '/' + data.image,
+          },
         },
-      },
-    });
+      });
+    } else {
+      sendMessage(receiver, {
+        text: `Đang có lỗi khi chuyển đổi ảnh(team sẽ sớm khắc phục). Bạn xem tạm text nha :D \n ${getSubjectsInHTML(
+          user.subjectHTML
+        )}`,
+      });
+    }
+
     return;
   }
 
@@ -82,14 +92,22 @@ const sendSubjectCtms = async (receiver: string | string[], cookie: Array<string
   }
 
   receiver.forEach((receiver_id: string) => {
-    sendMessage(receiver_id, {
-      attachment: {
-        type: 'image',
-        payload: {
-          url: config.host + '/' + data.image,
+    if (data.status) {
+      sendMessage(receiver_id, {
+        attachment: {
+          type: 'image',
+          payload: {
+            url: config.host + '/' + data.image,
+          },
         },
-      },
-    });
+      });
+    } else {
+      sendMessage(receiver_id, {
+        text: `Đang có lỗi khi chuyển đổi ảnh(team sẽ sớm khắc phục). Bạn xem tạm text nha :D \n ${getSubjectsInHTML(
+          user.subjectHTML
+        )}`,
+      });
+    }
   });
   logoutCtms(cookie);
 };
