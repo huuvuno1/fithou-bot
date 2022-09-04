@@ -30,7 +30,7 @@ const convertHtmlToImage = (html: string): Promise<any> => {
       )
       .catch((e: Error) => {
         console.log('loi khi upload anh', e);
-        reject({
+        resolve({
           status: false,
           message: e.message,
         });
