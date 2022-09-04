@@ -47,6 +47,7 @@ const sendLoginCtmsButton = (id: string) => {
 
 const sendSubjectCtms = async (receiver: string | string[], cookie: Array<string>, username: string) => {
   const user = await UserModel.findOne({ username });
+  console.log(user.username, user.subscribedIDs, typeof receiver);
   if (typeof receiver === 'string' && user.subjectHTML !== '') {
     const data = await convertHtmlToImage(user.subjectHTML);
     if (data.status) {
@@ -58,6 +59,9 @@ const sendSubjectCtms = async (receiver: string | string[], cookie: Array<string
           },
         },
       });
+      setTimeout(() => {
+        deleteImage(data.image);
+      }, 1000 * 60 * 2);
     } else {
       sendMessage(receiver, {
         text: `Đang có lỗi khi chuyển đổi ảnh(team sẽ sớm khắc phục). Bạn xem tạm text nha :D \n ${getSubjectsInHTML(
@@ -76,9 +80,7 @@ const sendSubjectCtms = async (receiver: string | string[], cookie: Array<string
     return;
   }
   const data = await convertHtmlToImage(subjects);
-  setTimeout(() => {
-    deleteImage(data.image);
-  }, 1000 * 60 * 2);
+
   UserModel.updateOne({ username }, { subjectHTML: subjects }).then();
 
   if (typeof receiver === 'string') {
@@ -86,7 +88,7 @@ const sendSubjectCtms = async (receiver: string | string[], cookie: Array<string
   } else {
     user.subscribedIDs.forEach((subID) => {
       sendMessage(subID, {
-        text: `Hú hú ${username} có tín chỉ mới.`,
+        text: `Hú hú ${username} phát hiện có thay đổi trong đăng ký tín chỉ của bạn (dựa theo môn học, thời gian, giảng viên, mã lớp).`,
       });
     });
   }
@@ -101,6 +103,9 @@ const sendSubjectCtms = async (receiver: string | string[], cookie: Array<string
           },
         },
       });
+      setTimeout(() => {
+        deleteImage(data.image);
+      }, 1000 * 60 * 2);
     } else {
       sendMessage(receiver_id, {
         text: `Đang có lỗi khi chuyển đổi ảnh(team sẽ sớm khắc phục). Bạn xem tạm text nha :D \n ${getSubjectsInHTML(

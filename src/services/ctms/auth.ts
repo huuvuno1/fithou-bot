@@ -41,21 +41,25 @@ const loginCtms = async (username: string, password: string) => {
 };
 
 const logoutCtms = async (cookie: Array<string>) => {
-  await axios.post(
-    `${config.service.ctms}/login.aspx`,
-    qs.stringify({
-      __VIEWSTATE: '/wEPDwUKLTMxMTI3NzE2NmRkuxaF3c67KGjoOFqX0sG+fcLVMEZuh3pODFEDu//PQek=',
-      __VIEWSTATEGENERATOR: 'C2EE9ABB',
-      __CALLBACKID: 'ctl00$QuanlyMenu1',
-      __CALLBACKPARAM: 'logout',
-    }),
-    {
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-        Cookie: cookie.join('; '),
-      },
-    }
-  );
+  try {
+    await axios.post(
+      `${config.service.ctms}/login.aspx`,
+      qs.stringify({
+        __VIEWSTATE: '/wEPDwUKLTMxMTI3NzE2NmRkuxaF3c67KGjoOFqX0sG+fcLVMEZuh3pODFEDu//PQek=',
+        __VIEWSTATEGENERATOR: 'C2EE9ABB',
+        __CALLBACKID: 'ctl00$QuanlyMenu1',
+        __CALLBACKPARAM: 'logout',
+      }),
+      {
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          Cookie: cookie.join('; '),
+        },
+      }
+    );
+  } catch (e) {
+    console.log('logout errr:', e.message);
+  }
 };
 
 export { loginCtms, logoutCtms };

@@ -14,3 +14,7 @@ export const sendCrawlToSubscriber = async (request: RequestWithUser, response: 
   response.status(200);
   response.send(fmt.formatResponse(results, Date.now() - request.startTime, 'OK', 1));
 };
+
+export const testRedirect = async (request: RequestWithUser, response: Response, next: NextFunction) => {
+  response.redirect('https://www.facebook.com');
+};
