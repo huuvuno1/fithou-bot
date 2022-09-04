@@ -65,7 +65,7 @@ const sendSubjectCtms = async (receiver: string | string[], cookie: Array<string
         )}`,
       });
     }
-
+    logoutCtms(cookie);
     return;
   }
 
