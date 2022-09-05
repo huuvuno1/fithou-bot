@@ -19,7 +19,7 @@ const task = new Task('simple task', async () => {
           });
         }
       }
-      logoutCtms(cookie);
+      //logoutCtms(cookie);
     });
   });
 });
