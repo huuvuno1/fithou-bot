@@ -4,6 +4,7 @@ import fs from 'fs';
 
 const convertHtmlToImage = (html: string): Promise<any> => {
   return new Promise((resolve, reject) => {
+    console.log('html cidn chao sdlfj');
     const image = `image-${new Date().getTime()}.png`;
     nodeHtmlToImage({
       output: `./public/${image}`,
@@ -19,19 +20,22 @@ const convertHtmlToImage = (html: string): Promise<any> => {
             </body>
         </html>
         `,
+      puppeteerArgs: { args: ['--no-sandbox', '--disable-setuid-sandbox'] },
     })
-      .then(() =>
+      .then(() => {
+        console.log('The image was created successfully!');
         resolve({
           status: true,
           image,
-        })
-      )
-      .catch((e: Error) =>
-        reject({
+        });
+      })
+      .catch((e: Error) => {
+        console.log('loi khi upload anh', e);
+        resolve({
           status: false,
           message: e.message,
-        })
-      );
+        });
+      });
   });
 };
 
