@@ -1,9 +1,13 @@
+/* eslint-disable max-len */
 import {
   sendLoginCtmsButton,
   sendMessage,
+  subCtmsSubject,
   subscribedFithouNotification,
-  unsubCtmsNotification,
+  unsubCtmsSubject,
   unsubFithouNotification,
+  unTrackTimetable,
+  removeCtmsAccount,
 } from 'services/facebook';
 
 const handleWebhook = async (data: any) => {
@@ -14,14 +18,28 @@ const handleWebhook = async (data: any) => {
     if (postback) {
       const { payload } = postback;
       switch (payload) {
-        case 'CTMS_SUBJECTS':
+        case 'GET_STARTED':
+          await sendMessage(id, {
+            text: `Chào mừng bạn đến với Fithou BOT. Chúc bạn có một trải nghiệm zui zẻ :D`,
+          });
+          return;
+        case 'ADD_CTMS_ACCOUNT':
           sendLoginCtmsButton(id);
+          return;
+        case 'REMOVE_CTMS_ACCOUNT':
+          removeCtmsAccount(id);
+          return;
+        case 'CTMS_SUBJECTS':
+          subCtmsSubject(id);
           return;
         case 'FITHOU_NOTIFICATION':
           subscribedFithouNotification(id);
           return;
         case 'UNSUB_CTMS_SUBJECTS':
-          unsubCtmsNotification(id);
+          unsubCtmsSubject(id);
+          return;
+        case 'UNNOTIFY_TIMETABLE':
+          unTrackTimetable(id);
           return;
         case 'UNSUB_FITHOU_NOTIFICATION':
           unsubFithouNotification(id);

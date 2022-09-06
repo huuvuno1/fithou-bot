@@ -7,8 +7,10 @@ const UsersSchema = new Schema<User>(
   {
     username: { type: String, required: true },
     password: { type: String, required: true },
-    subscribedIDs: { type: [String], default: [] },
+    subscribedID: { type: String, default: '' },
     subjectHTML: { type: String, default: '' },
+    isSubscribedSubject: { type: Boolean, default: false },
+    isTrackTimetable: { type: Boolean, default: false },
   },
   {
     timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' },
