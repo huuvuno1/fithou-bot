@@ -10,10 +10,16 @@ const rule = new schedule.RecurrenceRule();
 rule.second = config.jobs.fithou.second;
 
 import { crawlFithouJob } from './crawlFithouJob';
+import { morningSchedule, noonSchedule, eveningSchedule } from './schoolSchedule';
 
 const runjobs = () => {
   schedule.scheduleJob(rule, crawlFithouJob);
   scheduler.addSimpleIntervalJob(crawlCtmsJob);
+
+  schedule.scheduleJob('00 00 7 * * 0-6', morningSchedule);
+  schedule.scheduleJob('00 30 12 * * 0-6', noonSchedule);
+  schedule.scheduleJob('00 30 17 * * 0-6', eveningSchedule);
+
   console.log(scheduler.getById(job.id).getStatus());
 };
 
