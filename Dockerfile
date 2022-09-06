@@ -16,7 +16,7 @@ EXPOSE 8080
 
 WORKDIR /urs/src/app
 
-COPY package.json package-lock.json ./
+COPY package.json ./
 
 RUN npm install -f
 RUN npm install puppeteer --unsafe-perm=true --allow-root -f
