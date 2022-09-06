@@ -76,6 +76,7 @@ const sendSubjectCtms = async (receiver: string | string[], cookie: Array<string
   const id = await getUserID(cookie);
   const subjects = await getSubjects(cookie, id);
   if (subjects === null || user.subjectHTML === subjects) {
+    if (subjects === null) console.log('get subject fail ', id);
     logoutCtms(cookie);
     return;
   }
@@ -85,17 +86,15 @@ const sendSubjectCtms = async (receiver: string | string[], cookie: Array<string
 
   if (typeof receiver === 'string') {
     receiver = [receiver];
-  } else {
-    user.subscribedIDs.forEach((subID) => {
-      sendMessage(subID, {
-        text: `Hú hú ${username} phát hiện có thay đổi trong đăng ký tín chỉ của bạn (dựa theo môn học, thời gian, giảng viên, mã lớp).`,
-      });
-    });
   }
+  console.log('convert image result: ', data);
 
-  receiver.forEach((receiver_id: string) => {
+  receiver.forEach(async (receiver_id: string) => {
+    await sendMessage(receiver_id, {
+      text: `Hú hú ${username} phát hiện có thay đổi trong đăng ký tín chỉ của bạn (dựa theo môn học, thời gian, giảng viên, mã lớp).`,
+    });
     if (data.status) {
-      sendMessage(receiver_id, {
+      await sendMessage(receiver_id, {
         attachment: {
           type: 'image',
           payload: {
@@ -107,7 +106,7 @@ const sendSubjectCtms = async (receiver: string | string[], cookie: Array<string
         deleteImage(data.image);
       }, 1000 * 60 * 2);
     } else {
-      sendMessage(receiver_id, {
+      await sendMessage(receiver_id, {
         text: `Đang có lỗi khi chuyển đổi ảnh(team sẽ sớm khắc phục). Bạn xem tạm text nha :D \n ${getSubjectsInHTML(
           user.subjectHTML
         )}`,

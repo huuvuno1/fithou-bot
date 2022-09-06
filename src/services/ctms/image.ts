@@ -22,12 +22,13 @@ const convertHtmlToImage = (html: string): Promise<any> => {
         `,
       puppeteerArgs: { args: ['--no-sandbox', '--disable-setuid-sandbox'] },
     })
-      .then(() =>
+      .then(() => {
+        console.log('The image was created successfully!');
         resolve({
           status: true,
           image,
-        })
-      )
+        });
+      })
       .catch((e: Error) => {
         console.log('loi khi upload anh', e);
         resolve({
