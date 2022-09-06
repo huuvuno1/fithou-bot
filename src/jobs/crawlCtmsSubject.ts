@@ -1,5 +1,5 @@
 import { UserModel } from 'models';
-import { loginCtms } from 'services/ctms';
+import { loginCtms, logoutCtms } from 'services/ctms';
 import { sendMessage, sendSubjectCtms, unsubCtmsNotification } from 'services/facebook';
 import { SimpleIntervalJob, Task } from 'toad-scheduler';
 
@@ -19,6 +19,7 @@ const task = new Task('simple task', async () => {
           });
         }
       }
+      //logoutCtms(cookie);
     });
   });
 });

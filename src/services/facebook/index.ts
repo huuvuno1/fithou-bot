@@ -1,6 +1,7 @@
+/* eslint-disable max-len */
 import logger from 'logger';
 import { ArticlesModel, UserModel } from 'models';
-import { convertHtmlToImage, deleteImage, getSubjects, getUserID, logoutCtms } from 'services/ctms';
+import { convertHtmlToImage, deleteImage, getSubjects, getSubjectsInHTML, getUserID, logoutCtms } from 'services/ctms';
 import config from '../../config';
 const { default: axios } = require('axios');
 
@@ -45,53 +46,78 @@ const sendLoginCtmsButton = (id: string) => {
 };
 
 const sendSubjectCtms = async (receiver: string | string[], cookie: Array<string>, username: string) => {
-  const user = await UserModel.findOne({ username });
-  if (typeof receiver === 'string' && user.subjectHTML !== '') {
-    const data = await convertHtmlToImage(user.subjectHTML);
-    sendMessage(receiver, {
-      attachment: {
-        type: 'image',
-        payload: {
-          url: config.host + '/' + data.image,
-        },
-      },
-    });
-    return;
-  }
+  try {
+    const user = await UserModel.findOne({ username });
+    console.log(user.username, user.subscribedIDs, typeof receiver);
+    if (typeof receiver === 'string' && user.subjectHTML !== '') {
+      const data = await convertHtmlToImage(user.subjectHTML);
+      if (data.status) {
+        await sendMessage(receiver, {
+          attachment: {
+            type: 'image',
+            payload: {
+              url: config.host + '/' + data.image,
+            },
+          },
+        });
+        setTimeout(() => {
+          deleteImage(data.image);
+        }, 1000 * 60 * 2);
+      } else {
+        await sendMessage(receiver, {
+          text: `Đang có lỗi khi chuyển đổi ảnh(team sẽ sớm khắc phục). Bạn xem tạm text nha :D \n ${getSubjectsInHTML(
+            user.subjectHTML
+          )}`,
+        });
+      }
+      return;
+    }
 
-  const id = await getUserID(cookie);
-  const subjects = await getSubjects(cookie, id);
-  if (subjects === null || user.subjectHTML === subjects) {
-    logoutCtms(cookie);
-    return;
-  }
-  const data = await convertHtmlToImage(subjects);
-  setTimeout(() => {
-    deleteImage(data.image);
-  }, 1000 * 60 * 2);
-  UserModel.updateOne({ username }, { subjectHTML: subjects }).then();
+    const id = await getUserID(cookie);
+    const subjects = await getSubjects(cookie, id);
+    if (subjects === null || user.subjectHTML === subjects) {
+      if (subjects === null) console.log('get subject fail ', id);
+      logoutCtms(cookie);
+      return;
+    }
+    const data = await convertHtmlToImage(subjects);
 
-  if (typeof receiver === 'string') {
-    receiver = [receiver];
-  } else {
-    user.subscribedIDs.forEach((subID) => {
-      sendMessage(subID, {
-        text: `Hú hú ${username} có tín chỉ mới.`,
+    UserModel.updateOne({ username }, { subjectHTML: subjects }).then();
+
+    if (typeof receiver === 'string') {
+      receiver = [receiver];
+    }
+    console.log('convert image result: ', data);
+
+    receiver.forEach(async (receiver_id: string) => {
+      await sendMessage(receiver_id, {
+        text: `Hú hú ${username} phát hiện có thay đổi trong đăng ký tín chỉ của bạn (dựa theo môn học, thời gian, giảng viên, mã lớp).`,
       });
+      if (data.status) {
+        await sendMessage(receiver_id, {
+          attachment: {
+            type: 'image',
+            payload: {
+              url: config.host + '/' + data.image,
+            },
+          },
+        });
+        setTimeout(() => {
+          deleteImage(data.image);
+        }, 1000 * 60 * 2);
+      } else {
+        await sendMessage(receiver_id, {
+          text: `Đang có lỗi khi chuyển đổi ảnh(team sẽ sớm khắc phục). Bạn xem tạm text nha :D \n ${getSubjectsInHTML(
+            user.subjectHTML
+          )}`,
+        });
+      }
     });
+  } catch (e) {
+    console.log(e);
+  } finally {
+    await logoutCtms(cookie);
   }
-
-  receiver.forEach((receiver_id: string) => {
-    sendMessage(receiver_id, {
-      attachment: {
-        type: 'image',
-        payload: {
-          url: config.host + '/' + data.image,
-        },
-      },
-    });
-  });
-  logoutCtms(cookie);
 };
 
 const subscribedFithouNotification = async (receiver: string) => {
