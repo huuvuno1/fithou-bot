@@ -46,74 +46,78 @@ const sendLoginCtmsButton = (id: string) => {
 };
 
 const sendSubjectCtms = async (receiver: string | string[], cookie: Array<string>, username: string) => {
-  const user = await UserModel.findOne({ username });
-  console.log(user.username, user.subscribedIDs, typeof receiver);
-  if (typeof receiver === 'string' && user.subjectHTML !== '') {
-    const data = await convertHtmlToImage(user.subjectHTML);
-    if (data.status) {
-      sendMessage(receiver, {
-        attachment: {
-          type: 'image',
-          payload: {
-            url: config.host + '/' + data.image,
+  try {
+    const user = await UserModel.findOne({ username });
+    console.log(user.username, user.subscribedIDs, typeof receiver);
+    if (typeof receiver === 'string' && user.subjectHTML !== '') {
+      const data = await convertHtmlToImage(user.subjectHTML);
+      if (data.status) {
+        await sendMessage(receiver, {
+          attachment: {
+            type: 'image',
+            payload: {
+              url: config.host + '/' + data.image,
+            },
           },
-        },
-      });
-      setTimeout(() => {
-        deleteImage(data.image);
-      }, 1000 * 60 * 2);
-    } else {
-      sendMessage(receiver, {
-        text: `Đang có lỗi khi chuyển đổi ảnh(team sẽ sớm khắc phục). Bạn xem tạm text nha :D \n ${getSubjectsInHTML(
-          user.subjectHTML
-        )}`,
-      });
+        });
+        setTimeout(() => {
+          deleteImage(data.image);
+        }, 1000 * 60 * 2);
+      } else {
+        await sendMessage(receiver, {
+          text: `Đang có lỗi khi chuyển đổi ảnh(team sẽ sớm khắc phục). Bạn xem tạm text nha :D \n ${getSubjectsInHTML(
+            user.subjectHTML
+          )}`,
+        });
+      }
+      return;
     }
-    logoutCtms(cookie);
-    return;
-  }
 
-  const id = await getUserID(cookie);
-  const subjects = await getSubjects(cookie, id);
-  if (subjects === null || user.subjectHTML === subjects) {
-    if (subjects === null) console.log('get subject fail ', id);
-    logoutCtms(cookie);
-    return;
-  }
-  const data = await convertHtmlToImage(subjects);
+    const id = await getUserID(cookie);
+    const subjects = await getSubjects(cookie, id);
+    if (subjects === null || user.subjectHTML === subjects) {
+      if (subjects === null) console.log('get subject fail ', id);
+      logoutCtms(cookie);
+      return;
+    }
+    const data = await convertHtmlToImage(subjects);
 
-  UserModel.updateOne({ username }, { subjectHTML: subjects }).then();
+    UserModel.updateOne({ username }, { subjectHTML: subjects }).then();
 
-  if (typeof receiver === 'string') {
-    receiver = [receiver];
-  }
-  console.log('convert image result: ', data);
+    if (typeof receiver === 'string') {
+      receiver = [receiver];
+    }
+    console.log('convert image result: ', data);
 
-  receiver.forEach(async (receiver_id: string) => {
-    await sendMessage(receiver_id, {
-      text: `Hú hú ${username} phát hiện có thay đổi trong đăng ký tín chỉ của bạn (dựa theo môn học, thời gian, giảng viên, mã lớp).`,
+    receiver.forEach(async (receiver_id: string) => {
+      await sendMessage(receiver_id, {
+        text: `Hú hú ${username} phát hiện có thay đổi trong đăng ký tín chỉ của bạn (dựa theo môn học, thời gian, giảng viên, mã lớp).`,
+      });
+      if (data.status) {
+        await sendMessage(receiver_id, {
+          attachment: {
+            type: 'image',
+            payload: {
+              url: config.host + '/' + data.image,
+            },
+          },
+        });
+        setTimeout(() => {
+          deleteImage(data.image);
+        }, 1000 * 60 * 2);
+      } else {
+        await sendMessage(receiver_id, {
+          text: `Đang có lỗi khi chuyển đổi ảnh(team sẽ sớm khắc phục). Bạn xem tạm text nha :D \n ${getSubjectsInHTML(
+            user.subjectHTML
+          )}`,
+        });
+      }
     });
-    if (data.status) {
-      await sendMessage(receiver_id, {
-        attachment: {
-          type: 'image',
-          payload: {
-            url: config.host + '/' + data.image,
-          },
-        },
-      });
-      setTimeout(() => {
-        deleteImage(data.image);
-      }, 1000 * 60 * 2);
-    } else {
-      await sendMessage(receiver_id, {
-        text: `Đang có lỗi khi chuyển đổi ảnh(team sẽ sớm khắc phục). Bạn xem tạm text nha :D \n ${getSubjectsInHTML(
-          user.subjectHTML
-        )}`,
-      });
-    }
-  });
-  logoutCtms(cookie);
+  } catch (e) {
+    console.log(e);
+  } finally {
+    await logoutCtms(cookie);
+  }
 };
 
 const subscribedFithouNotification = async (receiver: string) => {
