@@ -11,8 +11,6 @@ const rule = new schedule.RecurrenceRule();
 // your timezone
 rule.tz = 'Asia/Ho_Chi_Minh';
 
-logger.warn(`morningSchedule is running at ${new Date()}`);
-
 rule.second = config.jobs.fithou.second;
 
 import { crawlFithouJob } from './crawlFithouJob';
