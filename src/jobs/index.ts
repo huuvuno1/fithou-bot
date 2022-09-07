@@ -1,5 +1,4 @@
 import config from 'config';
-import logger from 'logger';
 import schedule from 'node-schedule';
 import { ToadScheduler } from 'toad-scheduler';
 import job from './crawlCtmsSubject';
