@@ -11,6 +11,7 @@ import {
   logoutCtms,
 } from 'services/ctms';
 import config from '../../config';
+import { QUICK_REPLIES_TYPE } from './type';
 const { default: axios } = require('axios');
 
 const sendMessage = async (id: string, message: any) => {
@@ -28,6 +29,8 @@ const sendMessage = async (id: string, message: any) => {
 
 const sendLoginCtmsButton = async (id: string) => {
   const user = await UserModel.findOne({ subscribedID: id });
+
+  logger.warn(user);
   if (user) {
     sendMessage(id, {
       text: `CTMS BOT: Bạn đã đăng nhập CTMS. Vui lòng xóa tài khoản CTMS khỏi hệ thống trước khi đăng nhập lại.`,
@@ -78,7 +81,6 @@ const removeCtmsAccount = async (id: string) => {
 const sendSubjectCtms = async (receiver: string | string[], cookie: Array<string>, username: string) => {
   try {
     const user = await UserModel.findOne({ username });
-    console.log(user.username, user.subscribedID, typeof receiver);
     if (typeof receiver === 'string' && user.subjectHTML !== '') {
       const data = await convertHtmlToImage(user.subjectHTML);
       if (data.status) {
@@ -106,21 +108,17 @@ const sendSubjectCtms = async (receiver: string | string[], cookie: Array<string
     const id = await getUserID(cookie);
     const subjects = await getSubjects(cookie, id);
     if (subjects === null || user.subjectHTML === subjects) {
-      if (subjects === null) console.log('get subject fail ', id);
       logoutCtms(cookie);
       return;
     }
 
     const data = await convertHtmlToImage(subjects);
 
-    console.log(data);
-
     await UserModel.updateOne({ username }, { subjectHTML: subjects });
 
     if (typeof receiver === 'string') {
       receiver = [receiver];
     }
-    console.log('convert image result: ', data);
 
     receiver.forEach(async (receiver_id: string) => {
       await sendMessage(receiver_id, {
@@ -147,7 +145,6 @@ const sendSubjectCtms = async (receiver: string | string[], cookie: Array<string
       }
     });
   } catch (e) {
-    console.log(e);
   } finally {
     await logoutCtms(cookie);
   }
@@ -193,7 +190,6 @@ const subCtmsSubject = async (id: string) => {
     text: `Bot đã lập lịch theo dõi tín chỉ cho bạn. Lưu ý, bạn nên tắt tính năng này khi k cần dùng đến nha :D`,
   });
   const data = await loginCtms(user.username, user.password);
-  console.log('login ctms result: ', data);
   if (data.isSuccess) {
     await sendMessage(id, {
       text: `Dưới đây là các môn bạn hiện tại bạn có thể đăng ký. \nBot sẽ gửi thông báo cho bạn khi có thay đổi.`,
@@ -223,14 +219,62 @@ const unsubCtmsSubject = async (id: string) => {
   }
 };
 
+const trackTimetable = async (receiver: string) => {
+  try {
+    const updateDoc = {
+      $set: {
+        isTrackTimetable: true,
+      },
+    };
+    const user = await UserModel.findOneAndUpdate({ subscribedID: receiver }, updateDoc);
+    if (user?.isTrackTimetable) {
+      await sendMessage(receiver, {
+        text: `Bạn đã bật chức năng thông báo lịch học hàng ngày rồi nha.`,
+      });
+      return;
+    }
+
+    if (user) {
+      sendMessage(receiver, {
+        text: `🔔 Bật chức năng thông báo lịch học hàng ngày thành công!`,
+      });
+    } else {
+      sendMessage(receiver, {
+        text: `❗️ Bạn chưa thêm tài khoản CTMS vào hệ thống.`,
+      });
+    }
+  } catch (error) {
+    logger.error(error);
+  }
+};
+
 const unTrackTimetable = async (receiver: string) => {
-  sendMessage(receiver, {
-    text: `Đã hủy nhắc lịch học.`,
-  });
-  const user = await UserModel.findOne({ subscribedID: receiver });
-  if (user) {
-    user.isTrackTimetable = false;
-    await user.save();
+  try {
+    const updateDoc = {
+      $set: {
+        isTrackTimetable: false,
+      },
+    };
+    const user = await UserModel.findOneAndUpdate({ subscribedID: receiver }, updateDoc);
+
+    if (!user?.isTrackTimetable) {
+      await sendMessage(receiver, {
+        text: `Bạn chưa bật chức năng thông báo lịch học hàng ngày.`,
+      });
+      return;
+    }
+
+    if (user) {
+      sendMessage(receiver, {
+        text: `🔕 Đã tắt chức năng thông báo lịch học hàng ngày!`,
+      });
+    } else {
+      sendMessage(receiver, {
+        text: `❗️ Bạn chưa thêm tài khoản CTMS vào hệ thống.`,
+      });
+    }
+  } catch (error) {
+    logger.error(error);
   }
 };
 
@@ -243,6 +287,23 @@ const unsubFithouNotification = async (receiver: string) => {
   await article.save();
 };
 
+const sendQuickReplies = async (id: string, text: string, quick_replies: QUICK_REPLIES_TYPE[]) => {
+  try {
+    await axios.post(`https://graph.facebook.com/v14.0/me/messages?access_token=${config.accessToken}`, {
+      recipient: {
+        id,
+      },
+      messaging_type: 'RESPONSE',
+      message: {
+        text,
+        quick_replies,
+      },
+    });
+  } catch (error) {
+    logger.error(`Error ${error}`);
+  }
+};
+
 export {
   sendMessage,
   sendLoginCtmsButton,
@@ -251,6 +312,8 @@ export {
   unsubCtmsSubject,
   unsubFithouNotification,
   unTrackTimetable,
+  trackTimetable,
   subCtmsSubject,
   removeCtmsAccount,
+  sendQuickReplies,
 };

@@ -1,5 +1,5 @@
 import { UserModel } from 'models';
-import { loginCtms, logoutCtms } from 'services/ctms';
+import { loginCtms } from 'services/ctms';
 import { sendMessage, sendSubjectCtms, unsubCtmsSubject, unTrackTimetable } from 'services/facebook';
 import { SimpleIntervalJob, Task } from 'toad-scheduler';
 

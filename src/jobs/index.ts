@@ -13,7 +13,7 @@ rule.tz = 'Asia/Ho_Chi_Minh';
 rule.second = config.jobs.fithou.second;
 
 import { crawlFithouJob } from './crawlFithouJob';
-import { morningSchedule, noonSchedule, eveningSchedule } from './schoolSchedule';
+import { eveningSchedule, morningSchedule, noonSchedule } from './schoolSchedule';
 
 const runjobs = () => {
   schedule.scheduleJob(rule, crawlFithouJob);
