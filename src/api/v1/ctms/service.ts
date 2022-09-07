@@ -1,26 +1,31 @@
 /* eslint-disable max-len */
 import { UserModel } from 'models';
 import * as ctmsService from 'services/ctms';
-import { sendMessage, sendSubjectCtms } from 'services/facebook';
+import { sendMessage } from 'services/facebook';
 
 export const login = async (username: string, password: string, id: string) => {
   const result = await ctmsService.loginCtms(username, password);
   if (result.isSuccess) {
-    const user = await UserModel.findOne({ username });
-    if (!user) {
-      const newUser = new UserModel({ username, password, subscribedIDs: [id] });
+    const oldUser = await UserModel.findOne({ username });
+    if (!oldUser) {
+      const newUser = new UserModel({ username, password, subscribedID: id });
       await newUser.save();
     } else {
-      if (user.subscribedIDs.indexOf(id) === -1) user.subscribedIDs.push(id);
-      await UserModel.updateOne({ username }, { password, subscribedIDs: user.subscribedIDs });
+      if (oldUser && oldUser.subscribedID !== id) {
+        await sendMessage(oldUser.subscribedID, {
+          text: `CTMS BOT: Tài khoản này đã được đăng ký với người dùng khác. Bot sẽ hủy đăng ký tài khoản này.`,
+        });
+        await UserModel.deleteOne({ username });
+      }
+      await UserModel.updateOne(
+        { subscribedID: id },
+        { username, password, isSubscribedSubject: false, isTrackTimetable: false }
+      );
     }
-    await sendMessage(id, {
-      text: `Xin chào ${username},\nBot đã lập lịch theo dõi tín chỉ cho bạn. Lưu ý, bạn nên tắt tính năng này khi k cần dùng đến nha :D`,
-    });
+
     sendMessage(id, {
-      text: `Dưới đây là các môn bạn hiện tại bạn có thể đăng ký. \nBot sẽ gửi thông báo cho bạn khi có thay đổi.`,
+      text: `CTMS BOT: Đăng nhập thành công! Bạn đã có thể  sử dụng các dịch vụ ctms bot cung cấp.`,
     });
-    sendSubjectCtms(id, result.cookie, username);
   }
   return result;
 };

@@ -4,7 +4,7 @@ import fs from 'fs';
 
 const convertHtmlToImage = (html: string): Promise<any> => {
   return new Promise((resolve, reject) => {
-    console.log('html cidn chao sdlfj');
+    console.log('convert html to image start');
     const image = `image-${new Date().getTime()}.png`;
     nodeHtmlToImage({
       output: `./public/${image}`,
