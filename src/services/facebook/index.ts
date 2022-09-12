@@ -21,6 +21,8 @@ const sendMessage = async (id: string, message: any) => {
         id: id,
       },
       message,
+      messaging_type: 'MESSAGE_TAG',
+      tag: 'ACCOUNT_UPDATE',
     });
   } catch {
     logger.error(`Error when sending button id: ${id}`);
@@ -118,12 +120,16 @@ const sendSubjectCtms = async (receiver: string | string[], cookie: Array<string
 
     if (typeof receiver === 'string') {
       receiver = [receiver];
+    } else {
+      receiver.forEach(async (receiver_id) => {
+        await sendMessage(receiver_id, {
+          text: `Hú hú ${username} phát hiện có thay đổi trong đăng ký tín chỉ của bạn (dựa theo môn học, thời gian, giảng viên, mã lớp).
+Bạn nên tắt tính năng này khi không cần dùng đến :D`,
+        });
+      });
     }
 
     receiver.forEach(async (receiver_id: string) => {
-      await sendMessage(receiver_id, {
-        text: `Hú hú ${username} phát hiện có thay đổi trong đăng ký tín chỉ của bạn (dựa theo môn học, thời gian, giảng viên, mã lớp).`,
-      });
       if (data.status) {
         await sendMessage(receiver_id, {
           attachment: {
