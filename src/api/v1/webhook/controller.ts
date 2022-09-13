@@ -7,6 +7,7 @@ const verifyWebhook = (request: RequestWithUser, response: Response, next: NextF
   if (request.query['hub.verify_token'] === config.accessToken) {
     response.send(request.query['hub.challenge']);
   }
+
   response.send('Error, wrong validation token');
 };
 
