@@ -1,9 +1,24 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import axios from 'axios';
 import * as cheerio from 'cheerio';
 
 import { loginCtms, logoutCtms } from 'services/ctms';
-import { SCHOOL_SCHEDULE_URL, todayformatted } from 'utils/constants';
+import { EXPIRED_CTMS, SCHOOL_SCHEDULE_URL, todayformatted } from 'utils/constants';
 import logger from 'logger';
+
+const checkSession = (session: string) => {
+  if (session.match('07:30')) {
+    return 'Sáng';
+  }
+
+  if (session.match('13:00')) {
+    return 'Chiều';
+  }
+
+  if (session.match('17:15')) {
+    return 'Tối';
+  }
+};
 
 export const schoolScheduleService = async (username: string, password: string) => {
   try {
@@ -20,11 +35,26 @@ export const schoolScheduleService = async (username: string, password: string) 
 
       const $ = cheerio.load(dom.data);
 
+      const expiredNotiText = $('#leftcontent #thongbao').text().trim();
+      if (expiredNotiText === EXPIRED_CTMS) {
+        return {
+          isExpired: true,
+        };
+      }
+
       let list = {};
       $('#leftcontent #LeftCol_Lichhoc1_pnView div').each(function (index, element) {
         const day = $(element).children('b')?.text()?.trim()?.split('\n')[1]?.trim();
         if (day === todayformatted()) {
-          const sessionOne: any[] = [];
+          let sessionOne: any[] = [];
+          let sessionTwo: any[] = [];
+          let sessionThree: any[] = [];
+
+          let sessionTemp: any[] = [];
+
+          let sessionOneCheck = false;
+          let sessionTwoCheck = false;
+          let sessionThreeCheck = false;
 
           $(element)
             .children('div')
@@ -34,10 +64,35 @@ export const schoolScheduleService = async (username: string, password: string) 
             .eq(1)
             .children('td')
             .each(function (indexSecond, elementSecond) {
-              sessionOne.push($(elementSecond).text()?.trim());
+              const check = checkSession($(elementSecond).text()?.trim());
+
+              sessionTemp.push($(elementSecond).text()?.trim());
+
+              if (check === 'Sáng') {
+                sessionOneCheck = true;
+              } else if (check === 'Chiều') {
+                sessionTwoCheck = true;
+              } else if (check === 'Tối') {
+                sessionThreeCheck = true;
+              }
+
+              if (indexSecond === 6) {
+                if (sessionOneCheck) {
+                  sessionOne = sessionTemp;
+                  sessionTemp = [];
+                  sessionOneCheck = false;
+                } else if (sessionTwoCheck) {
+                  sessionTwo = sessionTemp;
+                  sessionTemp = [];
+                  sessionTwoCheck = false;
+                } else if (sessionThreeCheck) {
+                  sessionThree = sessionTemp;
+                  sessionTemp = [];
+                  sessionThreeCheck = false;
+                }
+              }
             });
 
-          const sessionTwo: any[] = [];
           $(element)
             .children('div')
             .children('table')
@@ -46,10 +101,35 @@ export const schoolScheduleService = async (username: string, password: string) 
             .eq(2)
             .children('td')
             .each(function (indexSecond, elementSecond) {
-              sessionTwo.push($(elementSecond).text()?.trim());
+              const check = checkSession($(elementSecond).text()?.trim());
+
+              sessionTemp.push($(elementSecond).text()?.trim());
+
+              if (check === 'Sáng') {
+                sessionOneCheck = true;
+              } else if (check === 'Chiều') {
+                sessionTwoCheck = true;
+              } else if (check === 'Tối') {
+                sessionThreeCheck = true;
+              }
+
+              if (indexSecond === 6) {
+                if (sessionOneCheck) {
+                  sessionOne = sessionTemp;
+                  sessionTemp = [];
+                  sessionOneCheck = false;
+                } else if (sessionTwoCheck) {
+                  sessionTwo = sessionTemp;
+                  sessionTemp = [];
+                  sessionTwoCheck = false;
+                } else if (sessionThreeCheck) {
+                  sessionThree = sessionTemp;
+                  sessionTemp = [];
+                  sessionThreeCheck = false;
+                }
+              }
             });
 
-          const sessionThree: any[] = [];
           $(element)
             .children('div')
             .children('table')
@@ -58,7 +138,33 @@ export const schoolScheduleService = async (username: string, password: string) 
             .eq(3)
             .children('td')
             .each(function (indexSecond, elementSecond) {
-              sessionThree.push($(elementSecond).text()?.trim());
+              const check = checkSession($(elementSecond).text()?.trim());
+
+              sessionTemp.push($(elementSecond).text()?.trim());
+
+              if (check === 'Sáng') {
+                sessionOneCheck = true;
+              } else if (check === 'Chiều') {
+                sessionTwoCheck = true;
+              } else if (check === 'Tối') {
+                sessionThreeCheck = true;
+              }
+
+              if (indexSecond === 6) {
+                if (sessionOneCheck) {
+                  sessionOne = sessionTemp;
+                  sessionTemp = [];
+                  sessionOneCheck = false;
+                } else if (sessionTwoCheck) {
+                  sessionTwo = sessionTemp;
+                  sessionTemp = [];
+                  sessionTwoCheck = false;
+                } else if (sessionThreeCheck) {
+                  sessionThree = sessionTemp;
+                  sessionTemp = [];
+                  sessionThreeCheck = false;
+                }
+              }
             });
 
           list = {

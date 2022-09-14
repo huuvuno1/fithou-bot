@@ -25,6 +25,8 @@ const SCHOOL_SCHEDULE_URL = 'http://ctms.fithou.net.vn/Lichhoc.aspx?sid=';
 
 const COLUMN_NAME_SCHEDULE = ['STT', 'Giờ', 'Phòng', 'Môn học', 'Giảng viên', 'Lớp', 'Trạng thái'];
 
+const EXPIRED_CTMS =
+  'Từ 2/2022, hãy thực hiện theo thông báo này để nhận được sự Hỗ trợ duy trì tài khoản truy cập CTMS từ khoa CNTT.';
 const todayformatted = () => {
   const today = new Date();
   const dd = String(today.getDate()).padStart(2, '0');
@@ -43,4 +45,5 @@ export {
   SCHOOL_SCHEDULE_URL,
   COLUMN_NAME_SCHEDULE,
   todayformatted,
+  EXPIRED_CTMS,
 };

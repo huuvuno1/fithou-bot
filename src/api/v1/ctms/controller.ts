@@ -9,4 +9,9 @@ const login = async (request: RequestWithUser, response: Response, next: NextFun
   response.send(fmt.formatResponse(results, Date.now() - request.startTime, 'OK', 1));
 };
 
-export { login };
+const sendNotiForUserOfCTMS = async (request: RequestWithUser, response: Response, next: NextFunction) => {
+  const results = await service.sendNotiForUserOfCTMS(request, next);
+  response.send(fmt.formatResponse(results, Date.now() - request.startTime, 'OK', 1));
+};
+
+export { login, sendNotiForUserOfCTMS };
