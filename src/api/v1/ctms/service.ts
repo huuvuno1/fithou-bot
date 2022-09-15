@@ -1,3 +1,4 @@
+import { NextFunction, Request } from 'express';
 /* eslint-disable max-len */
 import { UserModel } from 'models';
 import * as ctmsService from 'services/ctms';
@@ -28,4 +29,15 @@ export const login = async (username: string, password: string, id: string) => {
     });
   }
   return result;
+};
+
+export const sendNotiForUserOfCTMS = async (req: Request, next: NextFunction) => {
+  const { message } = req.body;
+  const users: any[] = await UserModel.find();
+  for (let i = 0; i < users.length; i++) {
+    await sendMessage(users[i].subscribedID, {
+      text: `${message}`,
+    });
+  }
+  return message;
 };
