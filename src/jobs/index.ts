@@ -21,7 +21,7 @@ const runjobs = () => {
 
   schedule.scheduleJob('00 00 7 * * 0-6', morningSchedule);
   schedule.scheduleJob('00 30 12 * * 0-6', noonSchedule);
-  schedule.scheduleJob('00 30 17 * * 0-6', eveningSchedule);
+  schedule.scheduleJob('00 30 16 * * 0-6', eveningSchedule);
 
   console.log(scheduler.getById(job.id).getStatus());
 };
