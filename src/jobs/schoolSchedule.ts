@@ -29,19 +29,19 @@ export const morningSchedule = async () => {
       const sessionOne = timeTable?.sessionOne;
     
       if (sessionOne?.length > 0 && sessionOne[sessionOne?.length - 1] === 'Học') {
-        return await sendMessage(user.subscribedID, {
+         await sendMessage(user.subscribedID, {
           text: message(`📝 Bạn có môn học vào buổi sáng`, sessionOne),
         });
       }
 
       if (sessionOne?.length > 0 && sessionOne[sessionOne?.length - 1] === 'Học trực tuyến') {
-        return await sendMessage(user.subscribedID, {
+         await sendMessage(user.subscribedID, {
           text: message(`📝 Bạn có môn học trực tuyến vào buổi sáng`, sessionOne),
         });
       }
 
       if (sessionOne?.length > 0 && sessionOne[sessionOne?.length - 1] === 'Nghỉ') {      
-        return await sendMessage(user.subscribedID, {
+         await sendMessage(user.subscribedID, {
           text: message(`🆘🆘🆘 Môn học sáng nay của bạn đã bị hủy (hoặc nghỉ học)`, sessionOne),
         });
       }
@@ -69,19 +69,19 @@ export const noonSchedule = async () => {
       const sessionTwo = timeTable?.sessionTwo;
 
       if (sessionTwo?.length > 0 && sessionTwo[sessionTwo?.length - 1] === 'Học') {        
-        return await sendMessage(user.subscribedID, {
+         await sendMessage(user.subscribedID, {
           text: message(`📝 Bạn có môn học vào buổi chiều`, sessionTwo),
         });
       }
       
       if (sessionTwo?.length > 0 && sessionTwo[sessionTwo?.length - 1] === 'Học trực tuyến') {        
-        return await sendMessage(user.subscribedID, {
+         await sendMessage(user.subscribedID, {
           text: message(`📝 Bạn có môn học trực tuyến vào buổi chiều`, sessionTwo),
         });
       }
 
       if (sessionTwo?.length > 0 && sessionTwo[sessionTwo?.length - 1] === 'Nghỉ') {        
-        return await sendMessage(user.subscribedID, {
+         await sendMessage(user.subscribedID, {
           text: message(`🆘🆘🆘 Môn học chiều nay của bạn đã bị hủy (hoặc nghỉ học)`, sessionTwo),
         });
       }
@@ -109,19 +109,19 @@ export const eveningSchedule = async () => {
       const sessionThree = timeTable?.sessionThree;
 
       if (sessionThree?.length > 0 && sessionThree[sessionThree?.length - 1] === 'Học') {        
-        return await sendMessage(user.subscribedID, {
+         await sendMessage(user.subscribedID, {
           text: message(`📝 Bạn có môn học vào buổi tối`, sessionThree),
         });
       }
 
       if (sessionThree?.length > 0 && sessionThree[sessionThree?.length - 1] === 'Học trực tuyến') {        
-        return await sendMessage(user.subscribedID, {
+         await sendMessage(user.subscribedID, {
           text: message(`📝 Bạn có môn học trực tuyến vào buổi tối`, sessionThree),
         });
       }
 
       if (sessionThree?.length > 0 && sessionThree[sessionThree?.length - 1] === 'Nghỉ') {
-        return await sendMessage(user.subscribedID, {
+         await sendMessage(user.subscribedID, {
           text: message(`🆘🆘🆘 Môn học tối nay của bạn đã bị hủy (hoặc nghỉ học)`, sessionThree),
         });
       }
